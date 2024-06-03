@@ -35,3 +35,86 @@
     <script src="script.js"></script>
 </body>
 </html>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1em 0;
+}
+
+main {
+    padding: 1em;
+}
+
+section {
+    background: white;
+    margin: 1em 0;
+    padding: 1em;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-top: 0.5em;
+}
+
+input, button {
+    margin-top: 0.5em;
+    padding: 0.5em;
+    font-size: 1em;
+}
+
+button {
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555;
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('transaction-form');
+    const transactionList = document.getElementById('transaction-list');
+    const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+    transactions.forEach(transaction => {
+        addTransactionToDOM(transaction);
+    });
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById('title').value;
+        const amount = document.getElementById('amount').value;
+        const date = document.getElementById('date').value;
+        const currency = document.getElementById('currency').value;
+        const user = document.getElementById('user').value;
+
+        const transaction = { title, amount, date, currency, user };
+        transactions.push(transaction);
+        localStorage.setItem('transactions', JSON.stringify(transactions));
+
+        addTransactionToDOM(transaction);
+        form.reset();
+    });
+
+    function addTransactionToDOM(transaction) {
+        const li = document.createElement('li');
+        li.textContent = `${transaction.title} - ${transaction.amount} ${transaction.currency} - ${new Date(transaction.date).toLocaleDateString()} - ${transaction.user}`;
+        transactionList.appendChild(li);
+    }
+});
